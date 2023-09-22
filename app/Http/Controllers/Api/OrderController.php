@@ -301,25 +301,19 @@ class OrderController extends Controller
             return GlobalFunction::not_found(Status::NOT_FOUND);
         }
 
-        // $not_allowed = $transaction
-        //     ->when($user->role_id == 3, function ($query) use ($user) {
-        //         return $query->where("requestor_id", $user->id);
-        //     })
-        //     ->when($user->role_id == 2, function ($query) use ($user_scope) {
-        //         return $query->whereIn("department_id", $user_scope);
-        //     })
-        //     ->get();
-        // if ($not_allowed->isEmpty()) {
-        //     return GlobalFunction::denied(Status::ACCESS_DENIED);
-        // }
+        $not_allowed = $transaction
+            ->when($user->role_id == 3, function ($query) use ($user) {
+                return $query->where("requestor_id", $user->id);
+            })
+            ->get();
+        if ($not_allowed->isEmpty()) {
+            return GlobalFunction::denied(Status::ACCESS_DENIED);
+        }
 
         $result = $transaction
             ->get()
             ->first()
             ->update([
-                "approver_id" => $user->id,
-                "approver_name" => $user->account_name,
-                "date_approved" => date("Y-m-d H:i:s"),
                 "reason" => $request->reason,
             ]);
 
@@ -337,10 +331,10 @@ class OrderController extends Controller
     public function cancelOrder(Request $request, $id)
     {
         $user = Auth()->user();
-        // $user_scope = User::where("id", $user->id)
-        //     ->with("scope_approval")
-        //     ->first()
-        //     ->scope_approval->pluck("location_code");
+        $user_scope = User::where("id", $user->id)
+            ->with("scope_order")
+            ->first()
+            ->scope_order->pluck("location_code");
 
         $order = Order::where("id", $id);
 
@@ -349,11 +343,11 @@ class OrderController extends Controller
             return GlobalFunction::not_found(Status::NOT_FOUND);
         }
 
-        // $not_allowed = $order
-        //     ->when($user->role_id == 2, function ($query) use ($user_scope) {
-        //         return $query->whereIn("customer_code", $user_scope);
-        //     })
-        //     ->get();
+        $not_allowed = $order
+            ->when($user->role_id == 3, function ($query) use ($user_scope) {
+                return $query->whereIn("customer_code", $user_scope);
+            })
+            ->get();
         if ($not_allowed->isEmpty()) {
             return GlobalFunction::response_function(Status::ACCESS_DENIED);
         }
