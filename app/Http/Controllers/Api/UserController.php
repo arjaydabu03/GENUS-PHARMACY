@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Models\TagAccountOrder;
 use App\Functions\GlobalFunction;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\DisplayRequest;
 use App\Http\Requests\User\UserRequest;
@@ -41,38 +42,10 @@ class UserController extends Controller
         return GlobalFunction::response_function(Status::USER_DISPLAY, $users);
     }
 
-    // public function customer(Request $request)
-    // {
-    //     $store = Store::with("scope_order")
-    //         ->get()
-    //         ->each(function ($item) {
-    //             $item->account_type = "sms";
-
-    //             return $item;
-    //         });
-    //     $user = User::with("scope_order")
-    //         ->get()
-    //         ->each(function ($item) {
-    //             $item->account_type = "online";
-
-    //             return $item;
-    //         });
-
-    //     $customer = [...$user, ...$store]; //array merge php 8
-
-    //     $account = collect($customer)
-    //         ->unique("account_code")
-    //         ->values();
-    //     return GlobalFunction::response_function(
-    //         Status::USER_DISPLAY,
-    //         $account
-    //     );
-    // }
-
     public function show($id)
     {
         $not_found = User::where("id", $id)->get();
-        //  return $not_found;
+
         if ($not_found->isEmpty()) {
             return GlobalFunction::not_found(Status::NOT_FOUND);
         }

@@ -42,8 +42,8 @@ class UserRequest extends FormRequest
             "company.id" => "required",
             "company.code" => "required",
             "company.name" => "required",
-            "scope_approval" => ["required_if:role_id,2", "array"],
-            "scope_order" => ["required_if:role_id,3", "array"],
+            // "scope_approval" => ["required_if:role_id,1", "array"],
+            "scope_order" => ["required_if:role_id,2", "array"],
             "role_id" => "required|exists:role,id,deleted_at,NULL",
             "mobile_no" => [
                 "required_if:role_id,7",

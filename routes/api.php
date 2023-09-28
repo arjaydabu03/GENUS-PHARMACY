@@ -3,9 +3,11 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\UomController;
+use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\API\CutoffController;
+use App\Http\Controllers\Api\ReportController;
 use App\Http\Controllers\Api\CompanyController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\LocationController;
@@ -78,11 +80,11 @@ Route::group(["middleware" => ["auth:sanctum"]], function () {
     Route::patch("role/{id}", [RoleController::class, "destroy"]);
     Route::apiResource("role", RoleController::class);
 
-    // Route::get("report", [ReportController::class, "view"]);
-    // Route::get("count", [ReportController::class, "count"]);
-    // Route::get("request_count", [ReportController::class, "requestor_count"]);
-    // Route::get("export", [ReportController::class, "export"]);
-    // Route::patch("serve/{id}", [ReportController::class, "serve"]);
+    Route::get("report", [ReportController::class, "index"]);
+    Route::get("count", [ReportController::class, "count"]);
+    Route::get("request_count", [ReportController::class, "requestor_count"]);
+    Route::get("export", [ReportController::class, "export"]);
+    Route::patch("serve/{id}", [ReportController::class, "serve"]);
 
     Route::patch("cut_off/{id}", [CutoffController::class, "destroy"]);
     Route::apiResource("cut_off", CutoffController::class);

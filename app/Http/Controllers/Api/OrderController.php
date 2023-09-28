@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Functions\GlobalFunction;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\Order\ReasonRequest;
 use App\Http\Resources\TransactionResource;
 use App\Http\Requests\Transaction\StoreRequest;
 use App\Http\Requests\Transaction\DisplayRequest;
@@ -270,6 +271,7 @@ class OrderController extends Controller
 
     public function to_post(Request $request, $id)
     {
+        $user = Auth()->user();
         $transaction = Transaction::where("id", $id)->get();
 
         if ($transaction->isEmpty()) {
@@ -277,6 +279,15 @@ class OrderController extends Controller
         }
 
         $transaction = Transaction::where("id", $id);
+
+        $not_allowed = $transaction
+            ->when($user->role_id == 2, function ($query) use ($user) {
+                return $query->where("requestor_id", $user->id);
+            })
+            ->get();
+        if ($not_allowed->isEmpty()) {
+            return GlobalFunction::denied(Status::ACCESS_DENIED);
+        }
 
         $transaction->update([
             "date_posted" => date("Y-m-d H:i:s"),
@@ -302,9 +313,10 @@ class OrderController extends Controller
         }
 
         $not_allowed = $transaction
-            ->when($user->role_id == 3, function ($query) use ($user) {
+            ->when($user->role_id != 2, function ($query) use ($user) {
                 return $query->where("requestor_id", $user->id);
             })
+            ->whereNull("date_posted")
             ->get();
         if ($not_allowed->isEmpty()) {
             return GlobalFunction::denied(Status::ACCESS_DENIED);
@@ -344,8 +356,11 @@ class OrderController extends Controller
         }
 
         $not_allowed = $order
-            ->when($user->role_id == 3, function ($query) use ($user_scope) {
+            ->when($user->role_id == 2, function ($query) use ($user_scope) {
                 return $query->whereIn("customer_code", $user_scope);
+            })
+            ->whereHas("transactions", function ($query) {
+                return $query->whereNull("date_posted");
             })
             ->get();
         if ($not_allowed->isEmpty()) {

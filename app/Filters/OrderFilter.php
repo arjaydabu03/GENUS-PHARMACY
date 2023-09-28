@@ -28,4 +28,38 @@ class OrderFilter extends QueryFilters
         "quantity",
         "remarks",
     ];
+    protected array $relationSearch = [
+        "transction" => ["date_posted"],
+    ];
+
+    public function status($status)
+    {
+        $this->builder
+            ->when($status === "pending", function ($query) {
+                $query->whereHas("transaction", function ($query) {
+                    $query->whereNull("date_posted");
+                });
+            })
+            ->when($status === "posted", function ($query) {
+                $query->whereHas("transaction", function ($query) {
+                    $query->whereNotNull("date_posted");
+                });
+            })
+            ->when($status === "all", function ($query) {
+                $query->withTrashed();
+            });
+    }
+
+    public function hello($from)
+    {
+        $this->builder->whereHas("transaction", function ($query) use ($from) {
+            $query->whereDate("date_ordered", ">=", $from);
+        });
+    }
+    public function to($to)
+    {
+        $this->builder->whereHas("transaction", function ($query) use ($to) {
+            $query->whereDate("date_ordered", "<=", $to);
+        });
+    }
 }

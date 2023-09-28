@@ -67,4 +67,5 @@ class Transaction extends Model
     }
 
     protected string $default_filters = TransactionFilter::class;
+
 }
