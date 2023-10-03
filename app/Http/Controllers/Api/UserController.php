@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\User;
+use App\Models\Cutoff;
 use App\Response\Status;
 use App\Models\TagAccount;
 use Illuminate\Http\Request;
@@ -10,11 +11,14 @@ use App\Models\TagAccountOrder;
 use App\Functions\GlobalFunction;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\DisplayRequest;
+use App\Http\Resources\LoginResource;
 use App\Http\Requests\User\UserRequest;
 use App\Http\Requests\User\LoginRequest;
 use App\Http\Requests\User\ChangeRequest;
+use Illuminate\Validation\ValidationException;
 use App\Http\Requests\User\Validation\CodeRequest;
 use App\Http\Requests\User\Validation\NameRequest;
 use App\Http\Requests\User\Validation\PasswordRequest;
@@ -112,7 +116,9 @@ class UserController extends Controller
 
     public function login(LoginRequest $request)
     {
-        $user = User::where("username", $request->username)
+        $cut_off = Cutoff::get();
+        $user = User::with("role")
+            ->where("username", $request->username)
             ->with("scope_approval", "scope_order")
             ->first();
 
@@ -128,8 +134,11 @@ class UserController extends Controller
         }
         $token = $user->createToken("PersonalAccessToken")->plainTextToken;
         $user["token"] = $token;
+        $user["cut_off"] = $cut_off;
 
         $cookie = cookie("pharmacy", $token);
+
+        $user = new LoginResource($user);
 
         return GlobalFunction::response_function(
             Status::LOGIN_USER,

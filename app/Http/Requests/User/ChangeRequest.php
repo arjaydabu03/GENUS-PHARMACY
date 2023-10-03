@@ -2,6 +2,9 @@
 
 namespace App\Http\Requests\User;
 
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ChangeRequest extends FormRequest
