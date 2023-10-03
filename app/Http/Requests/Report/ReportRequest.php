@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Transaction;
+namespace App\Http\Requests\Report;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class DisplayRequest extends FormRequest
+class ReportRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +24,7 @@ class DisplayRequest extends FormRequest
     public function rules()
     {
         return [
-            "status" => ["required", "string", "in:all,pending,posted,archive"],
+            "report_filter" => ["required", "string", "in:posted"],
         ];
     }
 }

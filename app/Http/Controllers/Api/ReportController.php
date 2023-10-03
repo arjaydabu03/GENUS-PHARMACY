@@ -9,11 +9,11 @@ use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Functions\GlobalFunction;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Transaction\DisplayRequest;
+use App\Http\Requests\Report\ReportRequest;
 
 class ReportController extends Controller
 {
-    public function index(DisplayRequest $request)
+    public function index(ReportRequest $request)
     {
         $transaction = Transaction::with("orders")
             ->useFilters()

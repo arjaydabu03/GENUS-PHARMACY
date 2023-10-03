@@ -59,9 +59,22 @@ class TransactionFilter extends QueryFilters
             ->when($status === "posted", function ($query) {
                 $query->whereNotNull("date_posted");
             })
+            ->when($status === "archive", function ($query) {
+                $query->onlyTrashed();
+            })
             ->when($status === "all", function ($query) {
                 $query->withTrashed();
             });
+    }
+
+    public function report_filter($report)
+    {
+        $this->builder->when($report === "posted", function ($query) {
+            $query->whereNotNull("date_posted");
+        });
+        // ->when($report === "all", function ($query) {
+        //     $query->whereNotNull("date_posted");
+        // });
     }
 
     public function from($from)

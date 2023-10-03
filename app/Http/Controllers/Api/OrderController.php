@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use Carbon\Carbon;
+use App\Models\User;
 use App\Models\Order;
 use App\Response\Status;
-use App\Models\Transaction;
 
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Functions\GlobalFunction;
 use App\Http\Controllers\Controller;
@@ -359,7 +360,7 @@ class OrderController extends Controller
             ->when($user->role_id == 2, function ($query) use ($user_scope) {
                 return $query->whereIn("customer_code", $user_scope);
             })
-            ->whereHas("transactions", function ($query) {
+            ->whereHas("transaction", function ($query) {
                 return $query->whereNull("date_posted");
             })
             ->get();
