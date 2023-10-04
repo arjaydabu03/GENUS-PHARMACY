@@ -35,6 +35,14 @@ return new class extends Migration {
             $table->string("customer_code");
             $table->string("customer_name");
 
+            $table->unsignedBigInteger("charge_company_id")->index();
+            $table
+                ->foreign("charge_company_id")
+                ->references("sync_id")
+                ->on("company");
+            $table->string("charge_company_code");
+            $table->string("charge_company_name");
+
             $table->unsignedBigInteger("charge_department_id")->index();
             $table
                 ->foreign("charge_department_id")

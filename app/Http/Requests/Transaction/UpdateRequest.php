@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Transaction;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateRequest extends FormRequest
@@ -54,6 +55,10 @@ class UpdateRequest extends FormRequest
             "customer.id" => "required",
             "customer.code" => "required",
             "customer.name" => "required",
+
+            "charge_company.id" => "required",
+            "charge_company.code" => "required",
+            "charge_company.name" => "required",
 
             "charge_department.id" => "required",
             "charge_department.code" => "required",

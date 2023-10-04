@@ -61,6 +61,10 @@ class StoreRequest extends FormRequest
             "customer.code" => "required",
             "customer.name" => "required",
 
+            "charge_company.id" => "required",
+            "charge_company.code" => "required",
+            "charge_company.name" => "required",
+
             "charge_department.id" => "required",
             "charge_department.code" => "required",
             "charge_department.name" => "required",

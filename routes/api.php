@@ -57,8 +57,9 @@ Route::group(["middleware" => ["auth:sanctum"]], function () {
     Route::post("validate_code", [MaterialController::class, "validate_code"]);
     Route::post("import", [MaterialController::class, "import_material"]);
 
-    Route::patch("posted/{id}", [OrderController::class, "to_post"]);
     Route::apiResource("order", OrderController::class);
+    Route::patch("order/{id}", [OrderController::class, "update"]);
+    Route::patch("posted/{id}", [OrderController::class, "to_post"]);
     Route::patch("order/cancel/{id}", [OrderController::class, "cancelOrder"]);
     Route::patch("transaction/cancel/{id}", [
         OrderController::class,

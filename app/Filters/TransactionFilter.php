@@ -2,6 +2,7 @@
 
 namespace App\Filters;
 
+use Carbon\Carbon;
 use Essa\APIToolKit\Filters\QueryFilters;
 
 class TransactionFilter extends QueryFilters
@@ -69,12 +70,19 @@ class TransactionFilter extends QueryFilters
 
     public function report_filter($report)
     {
-        $this->builder->when($report === "posted", function ($query) {
-            $query->whereNotNull("date_posted");
-        });
-        // ->when($report === "all", function ($query) {
-        //     $query->whereNotNull("date_posted");
-        // });
+        $date_today = Carbon::now()
+            ->timeZone("Asia/Manila")
+            ->format("Y-m-d");
+
+        $this->builder
+            ->when($report === "posted", function ($query) use ($date_today) {
+                $query
+                    ->whereNotNull("date_posted")
+                    ->whereDate("date_ordered", $date_today);
+            })
+            ->when($report === "all", function ($query) {
+                $query->whereNotNull("date_posted");
+            });
     }
 
     public function from($from)

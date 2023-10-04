@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\Order\ReasonRequest;
 use App\Http\Resources\TransactionResource;
 use App\Http\Requests\Transaction\StoreRequest;
+use App\Http\Requests\Transaction\UpdateRequest;
 use App\Http\Requests\Transaction\DisplayRequest;
 
 class OrderController extends Controller
@@ -133,6 +134,10 @@ class OrderController extends Controller
             "customer_code" => $request["customer"]["code"],
             "customer_name" => $request["customer"]["name"],
 
+            "charge_company_id" => $request["charge_company"]["id"],
+            "charge_company_code" => $request["charge_company"]["code"],
+            "charge_company_name" => $request["charge_company"]["name"],
+
             "charge_department_id" => $request["charge_department"]["id"],
             "charge_department_code" => $request["charge_department"]["code"],
             "charge_department_name" => $request["charge_department"]["name"],
@@ -175,29 +180,26 @@ class OrderController extends Controller
     public function update(UpdateRequest $request, $id)
     {
         $transaction = Transaction::find($id);
-
+        $user = Auth()->user();
         $orders = $request->order;
 
-        $invalid = $transaction
-            ->where("id", $id)
-            ->whereNull("date_approved")
+        $not_found = Transaction::where("id", $id)->exists();
+        if (!$not_found) {
+            return GlobalFunction::not_found(Status::NOT_FOUND);
+        }
+
+        $invalid = Transaction::where("id", $id)
+            ->where("requestor_id", $user->id)
+            ->whereNull("date_posted")
             ->get();
 
-        $user = Auth()->user();
-
-        $invalid = $transaction
-            ->where("id", $id)
-            ->whereNull("date_approved")
-            ->get();
+        if ($invalid->isEmpty()) {
+            return GlobalFunction::invalid(Status::ACCESS_DENIED);
+        }
 
         $invalid_update = $transaction->whereNotNull("date_posted");
         if (!$invalid_update) {
             return GlobalFunction::invalid(Status::INVALID_UPDATE_POSTED);
-        }
-
-        $not_found = Transaction::where("id", $id)->get();
-        if ($not_found->isEmpty()) {
-            return GlobalFunction::not_found(Status::NOT_FOUND);
         }
 
         $transaction->update([
@@ -349,14 +351,15 @@ class OrderController extends Controller
             ->first()
             ->scope_order->pluck("location_code");
 
-        $order = Order::where("id", $id);
+        $order = Order::with("transaction")->where("id", $id);
 
         $not_found = $order->get();
         if ($not_found->isEmpty()) {
             return GlobalFunction::not_found(Status::NOT_FOUND);
         }
 
-        $not_allowed = $order
+        $not_allowed = Order::with("transaction")
+            ->where("id", $id)
             ->when($user->role_id == 2, function ($query) use ($user_scope) {
                 return $query->whereIn("customer_code", $user_scope);
             })
@@ -388,7 +391,7 @@ class OrderController extends Controller
             ->update([
                 "approver_id" => $user->id,
                 "approver_name" => $user->account_name,
-                "date_approved" => date("Y-m-d H:i:s"),
+                "date_posted" => date("Y-m-d H:i:s"),
             ]);
 
         Transaction::withTrashed()
@@ -399,7 +402,7 @@ class OrderController extends Controller
             $order->get()->first()->transaction_id
         )->delete();
 
-        return GlobalFunction::delete_response(
+        return GlobalFunction::response_function(
             Status::ARCHIVE_STATUS,
             $order
                 ->withTrashed()

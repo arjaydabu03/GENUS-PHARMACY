@@ -24,7 +24,7 @@ class ReportRequest extends FormRequest
     public function rules()
     {
         return [
-            "report_filter" => ["required", "string", "in:posted"],
+            "report_filter" => ["required", "string", "in:posted,all"],
         ];
     }
 }
