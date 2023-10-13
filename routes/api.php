@@ -56,7 +56,7 @@ Route::group(["middleware" => ["auth:sanctum"]], function () {
     Route::apiResource("material", MaterialController::class);
     Route::post("validate_code", [MaterialController::class, "validate_code"]);
     Route::post("import", [MaterialController::class, "import_material"]);
-
+    Route::get("pharmacy_order", [OrderController::class, "pharmacy_order"]);
     Route::apiResource("order", OrderController::class);
     Route::patch("order/{id}", [OrderController::class, "update"]);
     Route::patch("posted/{id}", [OrderController::class, "to_post"]);
@@ -66,7 +66,6 @@ Route::group(["middleware" => ["auth:sanctum"]], function () {
         "cancelTransaction",
     ]);
     Route::get("transaction/notification", [OrderController::class, "count"]);
-    // Route::get("elixir_order", [OrderController::class, "elixir_order"]);
 
     Route::post("uom/validate", [UomController::class, "code_validate"]);
     Route::patch("uom/{id}", [UomController::class, "destroy"]);
@@ -96,5 +95,6 @@ Route::group(["middleware" => ["auth:sanctum"]], function () {
 });
 
 Route::post("login", [UserController::class, "login"]);
+
 // Route::get("reports", [ReportController::class, "view"]);
 // Route::get("users", [UserController::class, "index"]);

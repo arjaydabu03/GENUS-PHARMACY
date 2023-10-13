@@ -12,11 +12,13 @@ use Illuminate\Http\Request;
 use App\Functions\GlobalFunction;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\ElixirResource;
 use App\Http\Requests\Order\ReasonRequest;
 use App\Http\Resources\TransactionResource;
 use App\Http\Requests\Transaction\StoreRequest;
 use App\Http\Requests\Transaction\UpdateRequest;
 use App\Http\Requests\Transaction\DisplayRequest;
+use App\Http\Resources\ElixirTransactionResource;
 
 class OrderController extends Controller
 {
@@ -37,54 +39,17 @@ class OrderController extends Controller
         return GlobalFunction::response_function(Status::ORDER_DISPLAY, $order);
     }
 
-    // public function elixir_order(Request $request)
-    // {
-    //     $status = $request->input("status", "");
-    //     $from = $request->from;
-    //     $to = $request->to;
-    //     $date_today = Carbon::now()
-    //         ->timeZone("Asia/Manila")
-    //         ->format("Y-m-d");
-    //     $order = Transaction::with([
-    //         "orders" => function ($query) {
-    //             return $query->whereNull("deleted_at");
-    //         },
-    //     ])
-    //         ->whereNotNull("date_approved")
-    //         ->whereNull("deleted_at")
-    //         ->when(isset($request->from) && isset($request->to), function (
-    //             $query
-    //         ) use ($from, $to) {
-    //             $query->where(function ($query) use ($from, $to) {
-    //                 $query
-    //                     ->whereDate("date_needed", ">=", $from)
-    //                     ->whereDate("date_needed", "<=", $to);
-    //             });
-    //         })
-    //         ->when($status === "today", function ($query) use ($date_today) {
-    //             $query
-    //                 ->whereNotNull("date_approved")
-    //                 ->whereDate("date_needed", $date_today);
-    //         })
-    //         ->when($status === "pending", function ($query) use ($date_today) {
-    //             $query
-    //                 ->whereDate("date_needed", ">", $date_today)
-    //                 ->whereNotNull("date_approved");
-    //         })
-    //         ->when($status === "all", function ($query) {
-    //             $query
-    //                 ->whereNotNull("date_needed")
-    //                 ->whereNotNull("date_approved");
-    //         })
-    //         ->orderByDesc("updated_at")
-    //         ->get();
+    public function pharmacy_order(Request $request)
+    {
+        $transaction = Order::with("transaction")->get();
 
-    //     if ($order->isEmpty()) {
-    //         return GlobalFunction::not_found(Status::NOT_FOUND);
-    //     }
+        if ($transaction->isEmpty()) {
+            return GlobalFunction::not_found(Status::NOT_FOUND);
+        }
 
-    //     return GlobalFunction::response_function(Status::ORDER_DISPLAY, $order);
-    // }
+        $order_list = ElixirResource::collection($transaction);
+        return GlobalFunction::api_response($order_list);
+    }
 
     public function show($id)
     {

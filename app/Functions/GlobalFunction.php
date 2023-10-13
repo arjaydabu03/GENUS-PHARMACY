@@ -27,6 +27,16 @@ class GlobalFunction
             Status::SUCESS_STATUS
         );
     }
+    public static function api_response( $result = [])
+    {
+        return response()->json(
+            [
+               
+                "genus_order" => $result,
+            ],
+            Status::SUCESS_STATUS
+        );
+    }
     // ERRORS
     public static function not_found($message, $result = [])
     {

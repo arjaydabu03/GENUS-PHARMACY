@@ -2,6 +2,7 @@
 
 namespace App\Filters;
 
+use Carbon\Carbon;
 use Essa\APIToolKit\Filters\QueryFilters;
 
 class OrderFilter extends QueryFilters
@@ -34,23 +35,28 @@ class OrderFilter extends QueryFilters
 
     public function status($status)
     {
+        $date_today = Carbon::now()
+            ->timeZone("Asia/Manila")
+            ->format("Y-m-d");
+
         $this->builder
-            ->when($status === "pending", function ($query) {
-                $query->whereHas("transaction", function ($query) {
-                    $query->whereNull("date_posted");
-                });
-            })
-            ->when($status === "posted", function ($query) {
-                $query->whereHas("transaction", function ($query) {
-                    $query->whereNotNull("date_posted");
+            ->when($status === "posted", function ($query) use ($date_today) {
+                $query->whereHas("transaction", function ($query) use (
+                    $date_today
+                ) {
+                    return $query
+                        ->whereNotNull("date_posted")
+                        ->whereDate("date_ordered", $date_today);
                 });
             })
             ->when($status === "all", function ($query) {
-                $query->withTrashed();
+                $query->whereHas("transaction", function ($query) {
+                    $query->whereNotNull("date_posted");
+                });
             });
     }
 
-    public function hello($from)
+    public function from($from)
     {
         $this->builder->whereHas("transaction", function ($query) use ($from) {
             $query->whereDate("date_ordered", ">=", $from);

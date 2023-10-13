@@ -66,6 +66,14 @@ class Transaction extends Model
         )->withTrashed();
     }
 
-    protected string $default_filters = TransactionFilter::class;
+    // public function elixir_orders()
+    // {
+    //     return $this->belongsToMany(
+    //         Order::class,
+    //         "transaction_id",
+    //         "id"
+    //     )->withTrashed();
+    // }
 
+    protected string $default_filters = TransactionFilter::class;
 }
