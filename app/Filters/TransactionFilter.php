@@ -48,7 +48,8 @@ class TransactionFilter extends QueryFilters
         "requestor_id",
         "requestor_name",
         "rush",
-        "type",
+        "type_id",
+        "type_name",
         "batch_no",
     ];
     public function status($status)

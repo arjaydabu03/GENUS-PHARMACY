@@ -182,7 +182,8 @@ class OrderController extends Controller
             "charge_location_name" => $request["charge_location"]["name"],
 
             "rush" => $request["rush"],
-            "type" => $request["type"],
+            "type_id" => $request["type"]["id"],
+            "type_name" => $request["type"]["name"],
             "batch_no" => $request["batch_no"],
 
             "date_needed" => date("Y-m-d", strtotime($request["date_needed"])),

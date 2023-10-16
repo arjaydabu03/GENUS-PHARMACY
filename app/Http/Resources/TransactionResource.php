@@ -28,6 +28,10 @@ class TransactionResource extends JsonResource
                 "date_posted" => $this->date_posted,
             ],
             "reason" => $this->reason,
+            "type" => [
+                "id" => $this->type_id,
+                "name" => $this->type_name,
+            ],
             "company" => [
                 "id" => $this->company_id,
                 "code" => $this->company_code,
