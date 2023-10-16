@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\UomController;
 use App\Http\Controllers\Api\RoleController;
+use App\Http\Controllers\Api\TypeController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\API\CutoffController;
@@ -88,6 +89,9 @@ Route::group(["middleware" => ["auth:sanctum"]], function () {
 
     Route::patch("cut_off/{id}", [CutoffController::class, "destroy"]);
     Route::apiResource("cut_off", CutoffController::class);
+
+    Route::patch("type/{id}", [TypeController::class, "destroy"]);
+    Route::apiResource("type", TypeController::class);
 
     Route::apiResource("company", CompanyController::class);
     Route::apiResource("department", DepartmentController::class);

@@ -27,8 +27,10 @@ class Status
     const ROLE_SAVE = "Role successfully saved.";
     const CUTOFF_SAVE = "Cut off successfully saved.";
     const HRI_SAVE = "Hri customer successfully saved.";
+    const TYPE_SAVE = "Type successfully saved.";
     // DISPLAY DATA
     const USER_DISPLAY = "User display successfully.";
+    const TYPE_DISPLAY = "Type display successfully.";
     const HRI_DISPLAY = "HRI display successfully.";
     const STORE_DISPLAY = "Store display successfully.";
     const CATEGORY_DISPLAY = "Category display successfully.";
@@ -55,6 +57,7 @@ class Status
     const TRANSACTION_RETURN = "Transaction successfully return.";
     const TRANSACTION_SERVE = "Transaction successfully serve.";
     const HRI_UPDATE = "Hri customer successfully updated.";
+    const TYPE_UPDATE = "Type successfully updated.";
     //SOFT DELETE
     const ARCHIVE_STATUS = "Successfully archived.";
     const RESTORE_STATUS = "Successfully restored.";
