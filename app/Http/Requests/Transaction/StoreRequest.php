@@ -41,7 +41,8 @@ class StoreRequest extends FormRequest
             ],
             "date_needed" => "required",
             "rush" => "nullable",
-
+            "type.id" => ["required", "exists:type,id,deleted_at,NULL"],
+            "type.name" => "required",
             "company.id" => "required",
             "company.code" => "required",
             "company.name" => "required",

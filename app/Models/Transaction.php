@@ -53,7 +53,8 @@ class Transaction extends Model
         "requestor_id",
         "requestor_name",
         "rush",
-        "type",
+        "type_id",
+        "type_name",
         "batch_no",
     ];
 

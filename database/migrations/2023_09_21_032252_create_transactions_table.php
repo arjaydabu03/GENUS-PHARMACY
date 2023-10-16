@@ -59,6 +59,9 @@ return new class extends Migration {
             $table->string("charge_location_code");
             $table->string("charge_location_name");
 
+            $table->bigInteger("type_id")->index();
+            $table->string("type_name");
+
             $table->string("rush")->nullable();
             $table->string("reason")->nullable();
 

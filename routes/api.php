@@ -90,7 +90,7 @@ Route::group(["middleware" => ["auth:sanctum"]], function () {
     Route::patch("cut_off/{id}", [CutoffController::class, "destroy"]);
     Route::apiResource("cut_off", CutoffController::class);
 
-    Route::patch("type/{id}", [TypeController::class, "destroy"]);
+    Route::patch("type_archive/{id}", [TypeController::class, "destroy"]);
     Route::apiResource("type", TypeController::class);
 
     Route::apiResource("company", CompanyController::class);

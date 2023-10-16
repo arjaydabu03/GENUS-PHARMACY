@@ -69,6 +69,8 @@ class UpdateRequest extends FormRequest
             "charge_location.name" => "required",
 
             "rush" => "nullable",
+            "type.id" => ["required", "exists:type,id,deleted_at,NULL"],
+            "type.name" => "required",
 
             "order.*.id" => "nullable",
 

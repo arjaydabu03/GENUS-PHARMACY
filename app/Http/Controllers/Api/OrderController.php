@@ -80,7 +80,8 @@ class OrderController extends Controller
                 ->format("Y-m-d"),
 
             "rush" => $request["rush"],
-            "type" => $request["type"],
+            "type_id" => $request["type"]["id"],
+            "type_name" => $request["type"]["name"],
             "batch_no" => $request["batch_no"],
 
             "company_id" => $request["company"]["id"],
