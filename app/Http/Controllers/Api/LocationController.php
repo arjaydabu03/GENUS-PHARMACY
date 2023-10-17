@@ -21,7 +21,6 @@ class LocationController extends Controller
             })
             ->useFilters()
             ->dynamicPaginate();
-            
 
         $is_empty = $location->isEmpty();
 

@@ -20,20 +20,26 @@ class ElixirResource extends JsonResource
 
             "order_details" => [
                 "farm_code" => $this->customer_code,
-                "farm_name" => $this->customer_name,
-                "date_ordered" => $this->date_ordered,
-                "date_needed" => $this->date_needed,
-                "order_no" => $this->order_no,
-                "type" => $this->type,
-                "batch_no" => $this->batch_no,
-            ],
-            "order" => [
-                "itemCode" => $this->material_code,
-                "itemDescription" => $this->material_name,
+                "farm_name" => $this->transaction->customer_name,
+                "orderNo" => $this->order_no,
+                "dateOrdered" => date(
+                    "Y-m-d",
+                    strtotime($this->transaction->date_ordered)
+                ),
+                "dateNeeded" => date(
+                    "Y-m-d",
+                    strtotime($this->transaction->date_needed)
+                ),
 
-                "code" => $this->uom_code,
-                "quantity" => $this->quantity,
-                "category" => $this->category_name,
+                "type" => $this->transaction->type_name,
+                "batchNo" => $this->transaction->batch_no,
+                "order" => [
+                    "itemCode" => $this->material_code,
+                    "itemDescription" => $this->material_name,
+                    "uom" => $this->uom_code,
+                    "quantity" => $this->quantity,
+                    "category" => $this->category_name,
+                ],
             ],
         ];
     }

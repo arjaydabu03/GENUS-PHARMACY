@@ -41,7 +41,9 @@ class OrderController extends Controller
 
     public function pharmacy_order(Request $request)
     {
-        $transaction = Order::with("transaction")->get();
+        $transaction = Order::with("transaction")
+            ->useFilters()
+            ->get();
 
         if ($transaction->isEmpty()) {
             return GlobalFunction::not_found(Status::NOT_FOUND);
