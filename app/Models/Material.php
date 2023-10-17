@@ -29,7 +29,7 @@ class Material extends Model
 
     public function uom()
     {
-        return $this->belongsTo(UOM::class)
+        return $this->belongsTo(Uom::class)
             ->select("id", "code", "description", "deleted_at")
             ->withTrashed();
     }
