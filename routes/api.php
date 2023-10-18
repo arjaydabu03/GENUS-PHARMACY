@@ -72,11 +72,6 @@ Route::group(["middleware" => ["auth:sanctum"]], function () {
     Route::patch("uom/{id}", [UomController::class, "destroy"]);
     Route::apiResource("uom", UomController::class);
 
-    Route::post("warehouse/validate", [
-        WarehouseController::class,
-        "code_validate",
-    ]);
-
     Route::post("role/validate", [RoleController::class, "validate_name"]);
     Route::patch("role/{id}", [RoleController::class, "destroy"]);
     Route::apiResource("role", RoleController::class);
