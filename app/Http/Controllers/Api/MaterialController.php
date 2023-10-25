@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\Uom;
+use App\Models\Category;
 use App\Models\Material;
 use App\Response\Status;
 use Illuminate\Http\Request;
@@ -133,7 +135,7 @@ class MaterialController extends Controller
 
             $category_id = Category::where("name", $category)->first();
 
-            $uom_id = UOM::where("code", $uom)->first();
+            $uom_id = Uom::where("code", $uom)->first();
 
             $material = Material::create([
                 "code" => $code,
